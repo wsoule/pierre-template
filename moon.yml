@@ -64,7 +64,7 @@ tasks:
   # is excluded via ignoreFiles in stylelint.config.js so results do not
   # depend on whether builds have run.
   lint-css:
-    script: 'stylelint "**/*.css"'
+    script: 'stylelint "**/*.css" --allow-empty-input'
     inputs:
       - '**/*.css'
       - '!**/node_modules/**'
@@ -76,7 +76,7 @@ tasks:
       runInCI: 'always'
 
   lint-css-fix:
-    script: 'stylelint "**/*.css" --fix'
+    script: 'stylelint "**/*.css" --allow-empty-input --fix'
     options:
       cache: false
       runInCI: 'always'

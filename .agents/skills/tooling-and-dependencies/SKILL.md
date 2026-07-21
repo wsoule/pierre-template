@@ -46,8 +46,8 @@ This monorepo uses the `catalog` in `pnpm-workspace.yaml`.
 - Do not run `pnpm add <package>` inside a package directory; it writes direct
   versions and breaks the catalog pattern unless you manually normalize them.
 - Published packages may intentionally use ranges for end-user compatibility.
-  Apps should use catalog versions; published packages may use ranges only
-  when that is intentional.
+  Apps should use catalog versions; published packages may use ranges only when
+  that is intentional.
 
 ## Tasks
 

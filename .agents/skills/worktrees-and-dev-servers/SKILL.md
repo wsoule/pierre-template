@@ -10,21 +10,21 @@ description:
 # Worktrees and Dev Servers
 
 This repo includes a repo-specific `git worktree` helper for local/manual
-parallelization outside host-managed agent workspaces. Managed worktrees
-live at:
+parallelization outside host-managed agent workspaces. Managed worktrees live
+at:
 
 ```text
 ~/worktrees/<repo>/<slug>/
 ```
 
-Each managed worktree owns a port offset so dev servers, E2E fixtures,
-and the Chrome remote-debug instance do not collide. The main clone keeps
-default ports; linked worktrees shift ports.
+Each managed worktree owns a port offset so dev servers, E2E fixtures, and the
+Chrome remote-debug instance do not collide. The main clone keeps default ports;
+linked worktrees shift ports.
 
 If you are already inside a Conductor, Codex, Claude, or other host-provided
 workspace, do not create another worktree unless the user explicitly asks for a
-wt-managed worktree. Still use this skill when you start repo dev servers or
-E2E fixtures, because the cleanup and port-offset rules apply to those scripts.
+wt-managed worktree. Still use this skill when you start repo dev servers or E2E
+fixtures, because the cleanup and port-offset rules apply to those scripts.
 
 ## Worktree Commands
 

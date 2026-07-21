@@ -103,9 +103,9 @@ Flags:
 
 ### `wt clean` — nuke zombies
 
-Dev servers sometimes outlive the terminal that started them. When that
-happens, subsequent starts either collide or silently launch a duplicate.
-`wt clean` fixes this on demand:
+Dev servers sometimes outlive the terminal that started them. When that happens,
+subsequent starts either collide or silently launch a duplicate. `wt clean`
+fixes this on demand:
 
 - `moonx root:wt -- clean` — scans every managed worktree's expected ports and
   kills any process listening on them.
@@ -125,8 +125,8 @@ per worktree showing slug, offset, branch, and path — including the main clone
 
 ## Ports: how the offset system works
 
-Each port-bound dev/test service has a **base port**, registered in
-`PORT_BASES` in `scripts/wt.ts`. The template starts with one:
+Each port-bound dev/test service has a **base port**, registered in `PORT_BASES`
+in `scripts/wt.ts`. The template starts with one:
 
 | Service             | Base port |
 | ------------------- | --------- |
@@ -135,12 +135,11 @@ Each port-bound dev/test service has a **base port**, registered in
 Every worktree owns a **port offset** (0, 10, 20, 30, …). Its actual ports are
 `base + offset`. Main clone is always offset 0 — its ports are unchanged.
 
-`wt setup` picks an offset deterministically from the slug's hash (so
-recreating a worktree with the same slug tends to give you the same ports). If
-that candidate collides with another live worktree's offset, it bumps by 10
-until it finds a free slot. Discovery of live offsets is stateless:
-`git worktree list` combined with each worktree's `.env.worktree` is the source
-of truth.
+`wt setup` picks an offset deterministically from the slug's hash (so recreating
+a worktree with the same slug tends to give you the same ports). If that
+candidate collides with another live worktree's offset, it bumps by 10 until it
+finds a free slot. Discovery of live offsets is stateless: `git worktree list`
+combined with each worktree's `.env.worktree` is the source of truth.
 
 How the offset reaches dev tasks:
 
