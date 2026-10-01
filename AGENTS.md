@@ -79,12 +79,30 @@ starting any task:
 
 Do not load skills that are not relevant to the task.
 
-Claude Code discovers the same skills natively through per-skill symlinks in
-`.claude/skills/`. When adding a skill, also add its symlink:
+### Cross-agent layout
+
+`AGENTS.md` and `.agents/skills/` are the single source of truth. Most agents
+(Codex, Cursor, Copilot, Windsurf, Amp, opencode, Goose, Roo, Kilo, Zed) read
+both natively; everything else points back at them:
+
+| Path                                               | For                | Kind                                  |
+| -------------------------------------------------- | ------------------ | ------------------------------------- |
+| `CLAUDE.md`                                        | Claude Code        | imports `@AGENTS.md`                  |
+| `.claude/skills/<name>`                            | Claude Code, Cline | one symlink per skill                 |
+| `.junie/skills`, `.kiro/skills`, `.factory/skills` | Junie, Kiro, Droid | directory symlink to `.agents/skills` |
+| `.gemini/settings.json`                            | Gemini CLI         | `context.fileName: ["AGENTS.md"]`     |
+| `.aider.conf.yml`                                  | Aider              | `read: AGENTS.md`                     |
+
+When adding a skill, create `.agents/skills/<name>/SKILL.md`, then add its
+Claude Code symlink (the directory symlinks pick it up automatically):
 
 ```bash
 ln -s ../../.agents/skills/<name> .claude/skills/<name>
 ```
+
+Do not add `.rules`, `.cursorrules`, or `.github/copilot-instructions.md`: Zed
+loads only the first instruction file it finds, and those names rank ahead of
+`AGENTS.md`.
 
 ## Agent Artifacts
 
