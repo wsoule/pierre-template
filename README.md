@@ -21,8 +21,8 @@ moonx template:typecheck
 ## Layout
 
 - `packages/template` — placeholder library wired into the full pipeline (tsdown
-  build, bun test, tsgo typecheck). Rename or copy it to start real work; new
-  libraries go under `packages/`, new apps under `apps/`.
+  build, bun test, TypeScript 7 typecheck). Rename or copy it to start real
+  work; new libraries go under `packages/`, new apps under `apps/`.
 - `moon.yml` — root project (repo-wide lint/format/clean/worktree tasks). Keep
   its `dependsOn` list in sync with dist-producing packages.
 - `.moon/tasks/` — shared task definitions inherited by every project.

@@ -5,7 +5,6 @@
   "devDependencies": {
     "@moonrepo/cli": "catalog:",
     "@types/bun": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "lint-staged": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",

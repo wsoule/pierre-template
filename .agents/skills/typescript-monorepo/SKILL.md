@@ -15,9 +15,9 @@ strict.
 
 - Shared compiler options live in `tsconfig.options.json`.
 - Root `tsconfig.json` manages project references across the monorepo.
-- Typechecking uses `tsgo` and runs through moon: `moonx <project>:typecheck`
-  (moon builds workspace dependencies first, since types resolve through each
-  dependency's built dist).
+- Typechecking uses TypeScript 7 (`tsc`, the native compiler) and runs through
+  moon: `moonx <project>:typecheck` (moon builds workspace dependencies first,
+  since types resolve through each dependency's built dist).
 
 ## Project References
 
