@@ -6,6 +6,17 @@ on:
       - main
   pull_request:
 
+# Least privilege: CI only reads the repo. Jobs that need more must ask for
+# it explicitly.
+permissions:
+  contents: read
+
+# A new push to a PR supersedes its in-flight run; runs on main always
+# finish so every commit there gets a result.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 # Plain-text-friendly logs: moon already disables colors and spinners when it
 # detects CI. NO_COLOR keeps downloaded/raw logs byte-clean for humans and
 # agents; GitHub workflow commands (::error test annotations) are unaffected.

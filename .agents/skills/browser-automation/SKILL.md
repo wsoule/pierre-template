@@ -8,11 +8,16 @@ description:
 
 # Browser Automation
 
-Use `agent-browser` for web automation in this repo. Run:
+Use `agent-browser` for web automation in this repo. It is an external CLI, not
+a workspace dependency, so check that it is installed first:
 
 ```bash
-agent-browser --help
+command -v agent-browser && agent-browser --help
 ```
+
+If it is missing, do not install it globally. Use a browser tool your harness
+provides, or drive Playwright from a throwaway script outside the repo (many
+sandboxes preinstall Chromium; check `PLAYWRIGHT_BROWSERS_PATH`).
 
 Core workflow:
 

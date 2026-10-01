@@ -5,7 +5,6 @@
   "devDependencies": {
     "@moonrepo/cli": "catalog:",
     "@types/bun": "catalog:",
-    "@typescript/native-preview": "catalog:",
     "lint-staged": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
@@ -27,5 +26,5 @@
       "stylelint --fix"
     ]
   },
-  "packageManager": "pnpm@11.9.0"
+  "packageManager": "pnpm@12.6.0"
 }

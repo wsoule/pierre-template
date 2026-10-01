@@ -3,11 +3,17 @@
 ## Agent Environment
 
 Set `AGENT=1` at the start of every terminal session so Bun's test runner emits
-AI-friendly output:
+AI-friendly output (Claude Code sets it automatically from
+`.claude/settings.json`):
 
 ```bash
 export AGENT=1
 ```
+
+Claude Code also picks up committed hooks from `.claude/settings.json`: in
+Claude Code on the web, a SessionStart hook runs `pnpm install` and puts
+`node_modules/.bin` on PATH, and after every file write or edit a PostToolUse
+hook formats that file with oxfmt.
 
 Most local moon tasks (formatters, worktree management) are configured with
 `runInCI: 'always'` so they keep working in CI-marked shells like agent
@@ -25,6 +31,29 @@ themselves, unset the var: `CI= pnpm publish --dry-run`.
   pins only in `.prototools`.
 - [moon](https://moonrepo.dev/docs) is the task runner; `package.json` scripts
   are npm lifecycle hooks only.
+
+### When moon cannot start
+
+moon downloads its toolchain plugins from ghcr.io on first use. In sandboxes
+whose network policy blocks that (moon fails with
+`plugin::loader::registry::load_failure`), install dependencies with
+`pnpm install` and run the same tools directly. Each line mirrors the moon task
+in the comment:
+
+```bash
+export PATH="$PWD/node_modules/.bin:$PATH"               # from the repo root
+oxfmt .                                                  # root:format
+oxlint --type-aware --tsconfig tsconfig.oxlint.json .    # root:lint
+stylelint "**/*.css" --allow-empty-input                 # root:lint-css
+cd packages/<name>
+./node_modules/.bin/tsdown --clean                       # <name>:build
+tsc --noEmit --pretty                                    # <name>:typecheck
+bun test                                                 # <name>:test
+```
+
+Build a package's workspace dependencies before typechecking or testing it; moon
+normally does that ordering for you. Say in your handoff that moon itself was
+not run.
 
 ## Core Rules
 
@@ -49,6 +78,31 @@ starting any task:
 3. Read only the full `SKILL.md` files relevant to your task
 
 Do not load skills that are not relevant to the task.
+
+### Cross-agent layout
+
+`AGENTS.md` and `.agents/skills/` are the single source of truth. Most agents
+(Codex, Cursor, Copilot, Windsurf, Amp, opencode, Goose, Roo, Kilo, Zed) read
+both natively; everything else points back at them:
+
+| Path                                               | For                | Kind                                  |
+| -------------------------------------------------- | ------------------ | ------------------------------------- |
+| `CLAUDE.md`                                        | Claude Code        | imports `@AGENTS.md`                  |
+| `.claude/skills/<name>`                            | Claude Code, Cline | one symlink per skill                 |
+| `.junie/skills`, `.kiro/skills`, `.factory/skills` | Junie, Kiro, Droid | directory symlink to `.agents/skills` |
+| `.gemini/settings.json`                            | Gemini CLI         | `context.fileName: ["AGENTS.md"]`     |
+| `.aider.conf.yml`                                  | Aider              | `read: AGENTS.md`                     |
+
+When adding a skill, create `.agents/skills/<name>/SKILL.md`, then add its
+Claude Code symlink (the directory symlinks pick it up automatically):
+
+```bash
+ln -s ../../.agents/skills/<name> .claude/skills/<name>
+```
+
+Do not add `.rules`, `.cursorrules`, or `.github/copilot-instructions.md`: Zed
+loads only the first instruction file it finds, and those names rank ahead of
+`AGENTS.md`.
 
 ## Agent Artifacts
 

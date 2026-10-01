@@ -7,7 +7,9 @@ const config: UserConfig[] = defineConfig([
     clean: true,
     dts: {
       sourcemap: true,
-      tsgo: true,
+      // Without this, isolatedDeclarations makes the dts plugin pick its
+      // oxc generator; keep emitting declarations with TypeScript 7.
+      generator: 'tsgo',
     },
     platform: 'neutral',
   },
