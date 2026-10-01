@@ -3,11 +3,17 @@
 ## Agent Environment
 
 Set `AGENT=1` at the start of every terminal session so Bun's test runner emits
-AI-friendly output:
+AI-friendly output (Claude Code sets it automatically from
+`.claude/settings.json`):
 
 ```bash
 export AGENT=1
 ```
+
+Claude Code also picks up committed hooks from `.claude/settings.json`: in
+Claude Code on the web, a SessionStart hook runs `pnpm install` and puts
+`node_modules/.bin` on PATH, and after every file write or edit a PostToolUse
+hook formats that file with oxfmt.
 
 Most local moon tasks (formatters, worktree management) are configured with
 `runInCI: 'always'` so they keep working in CI-marked shells like agent
@@ -72,6 +78,13 @@ starting any task:
 3. Read only the full `SKILL.md` files relevant to your task
 
 Do not load skills that are not relevant to the task.
+
+Claude Code discovers the same skills natively through per-skill symlinks in
+`.claude/skills/`. When adding a skill, also add its symlink:
+
+```bash
+ln -s ../../.agents/skills/<name> .claude/skills/<name>
+```
 
 ## Agent Artifacts
 
