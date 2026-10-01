@@ -19,20 +19,39 @@ strict.
   moon: `moonx <project>:typecheck` (moon builds workspace dependencies first,
   since types resolve through each dependency's built dist).
 
-## Project References
+## Adding a Package
 
-When adding a new package or app:
+Copy `packages/template` and wire the copy into four places. Example for a new
+library `@template/utils`:
 
-- Add it to the root `tsconfig.json` references.
-- Ensure its local `tsconfig.json` follows existing package/app patterns.
-- Give it a `moon.yml` (language, layer, tags, and any project-specific tasks);
-  shared tasks come from `.moon/tasks/*.yml` via tags or project language.
+```bash
+cp -r packages/template packages/utils
+rm -rf packages/utils/dist packages/utils/node_modules packages/utils/*.tsbuildinfo
+```
 
-When one workspace package depends on another:
+1. `packages/utils/package.json` — set `"name": "@template/utils"`.
+2. `packages/utils/moon.yml` — keep `language`, `layer`, and `tags`; shared
+   tasks come from `.moon/tasks/*.yml` via tags or project language. The moon
+   project id is the directory name (`utils`), so tasks run as
+   `moonx utils:test`.
+3. Root `moon.yml` — add `'utils'` to `dependsOn`. Type-aware lint resolves
+   workspace imports through built dist, so every dist-producing package must be
+   listed or `root:lint` can run before it is built.
+4. Root `tsconfig.json` — add `{ "path": "packages/utils/tsconfig.json" }` to
+   `references` (editor/project discovery only; tasks do not use it).
 
-- Add the dependency as `workspace:*` in the consuming package.
-- Add the dependency to the consuming package's TypeScript `references` block
-  when needed for accurate and fast typechecking.
+Then run `pnpm install` and `moonx utils:build utils:typecheck utils:test`. Apps
+follow the same steps under `apps/`.
+
+## Depending on Another Workspace Package
+
+Cross-package imports resolve through the dependency's published `dist`, not
+through TypeScript project references, and moon builds dependencies first via
+`deps: ['^:build']`. So when `@template/app` imports `@template/utils`:
+
+- Add `"@template/utils": "workspace:*"` to the consumer's `package.json` and
+  run `pnpm install`. moon infers the project dependency from it.
+- Do not add a `references` entry between the two package tsconfigs.
 
 ## Workspace Dependencies
 

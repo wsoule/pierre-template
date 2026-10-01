@@ -26,6 +26,29 @@ themselves, unset the var: `CI= pnpm publish --dry-run`.
 - [moon](https://moonrepo.dev/docs) is the task runner; `package.json` scripts
   are npm lifecycle hooks only.
 
+### When moon cannot start
+
+moon downloads its toolchain plugins from ghcr.io on first use. In sandboxes
+whose network policy blocks that (moon fails with
+`plugin::loader::registry::load_failure`), install dependencies with
+`pnpm install` and run the same tools directly. Each line mirrors the moon task
+in the comment:
+
+```bash
+export PATH="$PWD/node_modules/.bin:$PATH"               # from the repo root
+oxfmt .                                                  # root:format
+oxlint --type-aware --tsconfig tsconfig.oxlint.json .    # root:lint
+stylelint "**/*.css" --allow-empty-input                 # root:lint-css
+cd packages/<name>
+./node_modules/.bin/tsdown --clean                       # <name>:build
+tsc --noEmit --pretty                                    # <name>:typecheck
+bun test                                                 # <name>:test
+```
+
+Build a package's workspace dependencies before typechecking or testing it; moon
+normally does that ordering for you. Say in your handoff that moon itself was
+not run.
+
 ## Core Rules
 
 - Use `pnpm` for install/add/remove/dedupe/package-manager and publishing work.
