@@ -29,3 +29,9 @@ moonx template:typecheck
 - `.agents/skills/` — agent-facing conventions; `AGENTS.md` is the entry point.
 - `scripts/` — worktree manager (`wt.ts`), dev-server helpers; see
   `scripts/README.md`.
+
+## License
+
+Apache-2.0 — see [`LICENSE.md`](LICENSE.md). Derived from the Pierre monorepo (©
+Pierre Computer Company); keep the license file and its copyright lines in
+projects created from this template.

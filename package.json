@@ -1,6 +1,7 @@
 {
   "name": "@template/root",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "devDependencies": {
     "@moonrepo/cli": "catalog:",
